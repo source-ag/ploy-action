@@ -1,11 +1,26 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Ploy Action'
+description: 'GitHub Action for Ploy, a simple deployment tool'
+author: 'DonDebonair'
+branding:
+  color: 'green'
+  icon: 'truck'
+
 inputs:
-  milliseconds: # change this
+  version:
+    description: 'Ploy version'
+    default: 'latest'
+    required: false
+  args:
+    description: 'Arguments to pass to Ploy'
+    required: false
+  deployment-file:
+    description: 'Ploy configuration file with services to deploy'
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  install-only:
+    description: 'Just install Ploy'
+    default: 'false'
+    required: false
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
