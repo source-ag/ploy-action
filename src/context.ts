@@ -6,16 +6,14 @@ export const osArch: string = os.arch()
 
 export interface Inputs {
   version: string
-  args: string
   deploymentFile: string
-  installOnly: boolean
+  verifyOnly: boolean
 }
 
 export async function getInputs(): Promise<Inputs> {
   return {
     version: core.getInput('version'),
-    args: core.getInput('args'),
     deploymentFile: core.getInput('deployment-file'),
-    installOnly: core.getBooleanInput('install-only')
+    verifyOnly: core.getBooleanInput('verify-only')
   }
 }

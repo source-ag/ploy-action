@@ -1,6 +1,6 @@
 {
   "name": "ploy-action",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Github Action to deploy software using Ploy",
   "main": "lib/main.js",
@@ -10,8 +10,7 @@
     "format:check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
-    "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm run package"
   },
   "repository": {
     "type": "git",

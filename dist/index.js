@@ -48,9 +48,8 @@ function getInputs() {
     return __awaiter(this, void 0, void 0, function* () {
         return {
             version: core.getInput('version'),
-            args: core.getInput('args'),
             deploymentFile: core.getInput('deployment-file'),
-            installOnly: core.getBooleanInput('install-only')
+            verifyOnly: core.getBooleanInput('verify-only')
         };
     });
 }
@@ -179,12 +178,16 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const context = __importStar(__nccwpck_require__(3842));
 const ploy = __importStar(__nccwpck_require__(5920));
+const exec = __importStar(__nccwpck_require__(1514));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.debug('Getting inputs...');
             const inputs = yield context.getInputs();
-            yield ploy.install(inputs.version);
+            const bin = yield ploy.install(inputs.version);
+            const subCommand = inputs.verifyOnly ? 'verify -f' : 'deploy';
+            const command = `${bin} ${subCommand} ${inputs.deploymentFile}`;
+            yield exec.exec(command, undefined, {});
         }
         catch (error) {
             if (error instanceof Error)
@@ -282,6 +285,7 @@ const getFilename = (version) => {
             break;
         }
         case 'arm': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const arm_version = process.config.variables.arm_version;
             arch = arm_version ? `armv${arm_version}` : 'arm';
             break;

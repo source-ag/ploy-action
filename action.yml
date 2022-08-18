@@ -10,14 +10,11 @@ inputs:
     description: 'Ploy version'
     default: 'latest'
     required: false
-  args:
-    description: 'Arguments to pass to Ploy'
-    required: false
   deployment-file:
     description: 'Ploy configuration file with services to deploy'
     required: true
-  install-only:
-    description: 'Just install Ploy'
+  verify-only:
+    description: 'Just verify deployments'
     default: 'false'
     required: false
 
