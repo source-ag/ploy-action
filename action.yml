@@ -13,9 +13,21 @@ inputs:
   deployment-file:
     description: 'Ploy configuration file with services to deploy'
     required: true
-  verify-only:
-    description: 'Just verify deployments'
-    default: 'false'
+  command:
+    description: 'Ploy command to run'
+    default: 'deploy'
+    required: false
+  update-service:
+    description: 'Service to update'
+    required: false
+  update-version:
+    description: 'Version to update service to'
+    required: false
+  update-commit-message:
+    description: 'Commit message to use for committing changes to deployment file'
+    required: false
+  update-branch:
+    description: 'Branch to commit updated deployment file to'
     required: false
 
 runs:

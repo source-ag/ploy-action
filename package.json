@@ -27,7 +27,8 @@
     "@actions/core": "^1.9.1",
     "@actions/exec": "^1.1.1",
     "@actions/http-client": "^2.0.1",
-    "@actions/tool-cache": "^2.0.1"
+    "@actions/tool-cache": "^2.0.1",
+    "simple-git": "^3.15.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
@@ -35,6 +36,7 @@
     "@typescript-eslint/parser": "^5.42.1",
     "@vercel/ncc": "^0.34.0",
     "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-github": "^4.4.1",
     "eslint-plugin-jest": "^27.1.5",
     "jest": "^28.1.3",

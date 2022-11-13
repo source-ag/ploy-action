@@ -5,7 +5,7 @@ import * as github from './github'
 import * as core from '@actions/core'
 import * as tc from '@actions/tool-cache'
 
-export async function install(version: string): Promise<string> {
+export const install = async (version: string): Promise<string> => {
   const release: github.GitHubRelease | null = await github.getRelease(version)
   if (!release) {
     throw new Error(`Cannot find Ploy ${version} release`)
@@ -31,17 +31,10 @@ export async function install(version: string): Promise<string> {
   }
   core.debug(`Extracted to ${extPath}`)
 
-  const cachePath: string = await tc.cacheDir(
-    extPath,
-    'ploy-action',
-    release.tag_name.replace(/^v/, '')
-  )
+  const cachePath: string = await tc.cacheDir(extPath, 'ploy-action', release.tag_name.replace(/^v/, ''))
   core.debug(`Cached to ${cachePath}`)
 
-  const exePath: string = path.join(
-    cachePath,
-    context.osPlat === 'win32' ? 'ploy.exe' : 'ploy'
-  )
+  const exePath: string = path.join(cachePath, context.osPlat === 'win32' ? 'ploy.exe' : 'ploy')
   core.debug(`Exe path is ${exePath}`)
 
   return exePath
@@ -72,18 +65,7 @@ const getFilename = (version: string): string => {
   if (context.osPlat === 'darwin') {
     arch = 'all'
   }
-  const platform: string =
-    context.osPlat === 'win32'
-      ? 'windows'
-      : context.osPlat === 'darwin'
-      ? 'mac'
-      : 'linux'
+  const platform: string = context.osPlat === 'win32' ? 'windows' : context.osPlat === 'darwin' ? 'mac' : 'linux'
   const ext: string = context.osPlat === 'win32' ? 'zip' : 'tar.gz'
-  return util.format(
-    'ploy_%s_%s_%s.%s',
-    version.replace(/^v/, ''),
-    platform,
-    arch,
-    ext
-  )
+  return util.format('ploy_%s_%s_%s.%s', version.replace(/^v/, ''), platform, arch, ext)
 }

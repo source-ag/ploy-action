@@ -7,13 +7,24 @@ export const osArch: string = os.arch()
 export interface Inputs {
   version: string
   deploymentFile: string
-  verifyOnly: boolean
+  command: string
+  updateService: string | undefined
+  updateVersion: string | undefined
+  updateCommitMessage: string | undefined
+  updateBranch: string | undefined
 }
 
-export async function getInputs(): Promise<Inputs> {
-  return {
-    version: core.getInput('version'),
-    deploymentFile: core.getInput('deployment-file'),
-    verifyOnly: core.getBooleanInput('verify-only')
-  }
+const getInputOrUndefined = (name: string): string | undefined => {
+  const rawInput = core.getInput(name)
+  return rawInput === '' ? undefined : rawInput
 }
+
+export const getInputs = (): Inputs => ({
+  version: core.getInput('version'),
+  deploymentFile: core.getInput('deployment-file'),
+  command: core.getInput('command'),
+  updateService: getInputOrUndefined('update-service'),
+  updateVersion: getInputOrUndefined('update-version'),
+  updateCommitMessage: getInputOrUndefined('update-commit-message'),
+  updateBranch: getInputOrUndefined('update-branch')
+})

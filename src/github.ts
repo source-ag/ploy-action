@@ -7,9 +7,7 @@ export interface GitHubRelease {
   tag_name: string
 }
 
-export const getRelease = async (
-  version: string
-): Promise<GitHubRelease | null> => {
+export const getRelease = async (version: string): Promise<GitHubRelease | null> => {
   const resolvedVersion: string = (await resolveVersion(version)) || version
   core.debug(`Version '${version}' resolved as '${resolvedVersion}'`)
   const url = `https://github.com/DonDebonair/ploy/releases/${resolvedVersion}`
