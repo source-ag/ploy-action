@@ -212,15 +212,19 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         core.debug('Getting inputs...');
         const inputs = context.getInputs();
         const bin = yield ploy.install(inputs.version);
-        const command = `${bin} ${inputs.command} ${inputs.deploymentFile}`;
-        yield exec.exec(command, undefined, {});
         if (inputs.command === 'update') {
             if (inputs.updateService === undefined || inputs.updateVersion === undefined) {
                 core.error("update-service and update-version have to be provided when using 'update' command");
             }
             else {
+                const command = `${bin} ${inputs.command} ${inputs.deploymentFile} ${inputs.updateService} ${inputs.updateVersion}`;
+                yield exec.exec(command, undefined, {});
                 yield git.addCommitPushChanges(inputs.deploymentFile, inputs.updateService, inputs.updateVersion, inputs.updateBranch, inputs.updateCommitMessage);
             }
+        }
+        else {
+            const command = `${bin} ${inputs.command} ${inputs.deploymentFile}`;
+            yield exec.exec(command, undefined, {});
         }
     }
     catch (error) {

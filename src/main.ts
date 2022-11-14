@@ -9,12 +9,12 @@ const run = async (): Promise<void> => {
     core.debug('Getting inputs...')
     const inputs = context.getInputs()
     const bin = await ploy.install(inputs.version)
-    const command = `${bin} ${inputs.command} ${inputs.deploymentFile}`
-    await exec.exec(command, undefined, {})
     if (inputs.command === 'update') {
       if (inputs.updateService === undefined || inputs.updateVersion === undefined) {
         core.error("update-service and update-version have to be provided when using 'update' command")
       } else {
+        const command = `${bin} ${inputs.command} ${inputs.deploymentFile} ${inputs.updateService} ${inputs.updateVersion}`
+        await exec.exec(command, undefined, {})
         await git.addCommitPushChanges(
           inputs.deploymentFile,
           inputs.updateService,
@@ -23,6 +23,9 @@ const run = async (): Promise<void> => {
           inputs.updateCommitMessage
         )
       }
+    } else {
+      const command = `${bin} ${inputs.command} ${inputs.deploymentFile}`
+      await exec.exec(command, undefined, {})
     }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
