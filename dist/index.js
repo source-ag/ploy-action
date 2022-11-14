@@ -72,6 +72,9 @@ exports.addCommitPushChanges = void 0;
 const simple_git_1 = __nccwpck_require__(9103);
 const addCommitPushChanges = (deploymentFile, serviceId, version, branch, commitMessage) => __awaiter(void 0, void 0, void 0, function* () {
     const git = (0, simple_git_1.simpleGit)();
+    if (branch !== undefined) {
+        git.checkout(branch);
+    }
     yield git.add(deploymentFile);
     const finalCommitMessage = commitMessage ? commitMessage : `ci: update ${serviceId} to version ${version}`;
     yield git.commit(finalCommitMessage);
