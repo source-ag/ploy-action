@@ -45,6 +45,8 @@ const getInputs = () => ({
     command: core.getInput('command'),
     updateService: getInputOrUndefined('update-service'),
     updateVersion: getInputOrUndefined('update-version'),
+    updateAuthorName: getInputOrUndefined('update-author-name'),
+    updateAuthorEmail: getInputOrUndefined('update-author-email'),
     updateCommitMessage: getInputOrUndefined('update-commit-message'),
     updateBranch: getInputOrUndefined('update-branch')
 });
@@ -70,8 +72,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addCommitPushChanges = void 0;
 const simple_git_1 = __nccwpck_require__(9103);
-const addCommitPushChanges = (deploymentFile, serviceId, version, branch, commitMessage) => __awaiter(void 0, void 0, void 0, function* () {
+const addCommitPushChanges = (deploymentFile, serviceId, version, authorName, authorEmail, branch, commitMessage) => __awaiter(void 0, void 0, void 0, function* () {
     const git = (0, simple_git_1.simpleGit)();
+    git.addConfig('user.name', authorName);
+    git.addConfig('user.email', authorEmail);
     if (branch !== undefined) {
         git.checkout(branch);
     }
@@ -213,13 +217,17 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         const inputs = context.getInputs();
         const bin = yield ploy.install(inputs.version);
         if (inputs.command === 'update') {
-            if (inputs.updateService === undefined || inputs.updateVersion === undefined) {
-                core.error("update-service and update-version have to be provided when using 'update' command");
+            if (inputs.updateService === undefined ||
+                inputs.updateVersion === undefined ||
+                inputs.updateAuthorName === undefined ||
+                inputs.updateAuthorEmail === undefined) {
+                core.error("update-service, update-version, update-author-name and update-author-email have to be provided when using 'update' command");
             }
             else {
                 const command = `${bin} ${inputs.command} ${inputs.deploymentFile} ${inputs.updateService} ${inputs.updateVersion}`;
                 yield exec.exec(command, undefined, {});
-                yield git.addCommitPushChanges(inputs.deploymentFile, inputs.updateService, inputs.updateVersion, inputs.updateBranch, inputs.updateCommitMessage);
+                // TODO: add git author (take from inputs)
+                yield git.addCommitPushChanges(inputs.deploymentFile, inputs.updateService, inputs.updateVersion, inputs.updateAuthorName, inputs.updateAuthorEmail, inputs.updateBranch, inputs.updateCommitMessage);
             }
         }
         else {

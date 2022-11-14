@@ -10,15 +10,25 @@ const run = async (): Promise<void> => {
     const inputs = context.getInputs()
     const bin = await ploy.install(inputs.version)
     if (inputs.command === 'update') {
-      if (inputs.updateService === undefined || inputs.updateVersion === undefined) {
-        core.error("update-service and update-version have to be provided when using 'update' command")
+      if (
+        inputs.updateService === undefined ||
+        inputs.updateVersion === undefined ||
+        inputs.updateAuthorName === undefined ||
+        inputs.updateAuthorEmail === undefined
+      ) {
+        core.error(
+          "update-service, update-version, update-author-name and update-author-email have to be provided when using 'update' command"
+        )
       } else {
         const command = `${bin} ${inputs.command} ${inputs.deploymentFile} ${inputs.updateService} ${inputs.updateVersion}`
         await exec.exec(command, undefined, {})
+        // TODO: add git author (take from inputs)
         await git.addCommitPushChanges(
           inputs.deploymentFile,
           inputs.updateService,
           inputs.updateVersion,
+          inputs.updateAuthorName,
+          inputs.updateAuthorEmail,
           inputs.updateBranch,
           inputs.updateCommitMessage
         )

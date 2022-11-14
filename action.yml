@@ -23,6 +23,12 @@ inputs:
   update-version:
     description: 'Version to update service to'
     required: false
+  update-author-name:
+    description: 'Name to use for committing changes'
+    required: false
+  update-author-email:
+    description: 'Email to use for committing changes'
+    required: false
   update-commit-message:
     description: 'Commit message to use for committing changes to deployment file'
     required: false

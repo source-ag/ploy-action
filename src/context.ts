@@ -10,6 +10,8 @@ export interface Inputs {
   command: string
   updateService: string | undefined
   updateVersion: string | undefined
+  updateAuthorName: string | undefined
+  updateAuthorEmail: string | undefined
   updateCommitMessage: string | undefined
   updateBranch: string | undefined
 }
@@ -25,6 +27,8 @@ export const getInputs = (): Inputs => ({
   command: core.getInput('command'),
   updateService: getInputOrUndefined('update-service'),
   updateVersion: getInputOrUndefined('update-version'),
+  updateAuthorName: getInputOrUndefined('update-author-name'),
+  updateAuthorEmail: getInputOrUndefined('update-author-email'),
   updateCommitMessage: getInputOrUndefined('update-commit-message'),
   updateBranch: getInputOrUndefined('update-branch')
 })
