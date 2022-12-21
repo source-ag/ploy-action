@@ -291,6 +291,10 @@ const github = __importStar(__nccwpck_require__(5928));
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const install = (version) => __awaiter(void 0, void 0, void 0, function* () {
+    const githubToken = core.getInput('github_token');
+    if (githubToken === '') {
+        core.warning('No github_token supplied, API requests will be subject to stricter rate limiting');
+    }
     const release = yield github.getRelease(version);
     if (!release) {
         throw new Error(`Cannot find Ploy ${version} release`);
@@ -298,7 +302,8 @@ const install = (version) => __awaiter(void 0, void 0, void 0, function* () {
     const filename = getFilename(release.tag_name);
     const downloadUrl = util.format('https://github.com/DonDebonair/ploy/releases/download/%s/%s', release.tag_name, filename);
     core.info(`Downloading ${downloadUrl}`);
-    const downloadPath = yield tc.downloadTool(downloadUrl);
+    const authHeader = githubToken === '' ? undefined : `token ${githubToken}`;
+    const downloadPath = yield tc.downloadTool(downloadUrl, undefined, authHeader);
     core.debug(`Downloaded to ${downloadPath}`);
     core.info('Extracting Ploy');
     let extPath;
@@ -10887,7 +10892,7 @@ var init_abort_plugin = __esm({
 
 // src/lib/plugins/block-unsafe-operations-plugin.ts
 function isConfigSwitch(arg) {
-  return arg.trim().toLowerCase() === "-c";
+  return typeof arg === "string" && arg.trim().toLowerCase() === "-c";
 }
 function preventProtocolOverride(arg, next) {
   if (!isConfigSwitch(arg)) {

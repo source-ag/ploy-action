@@ -32,4 +32,14 @@ jobs:
         uses: DonDebonair/ploy-action@v1
         with:
           deployment-file: development.yml
+          github_token: ${{ github.token }}
+```
+
+## Development
+
+To generate the `dist` code, please run
+
+```
+npm ci
+npm run all
 ```
