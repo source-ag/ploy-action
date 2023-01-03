@@ -32,7 +32,7 @@ jobs:
         uses: DonDebonair/ploy-action@v1
         with:
           deployment-file: development.yml
-          github_token: ${{ github.token }}
+          github-token: ${{ github.token }}
 ```
 
 ## Development

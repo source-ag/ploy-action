@@ -35,7 +35,7 @@ inputs:
   update-branch:
     description: 'Branch to commit updated deployment file to'
     required: false
-  github_token:
+  github-token:
     description: The GitHub token to use when making API requests.
     required: false
 

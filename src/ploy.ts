@@ -6,11 +6,11 @@ import * as core from '@actions/core'
 import * as tc from '@actions/tool-cache'
 
 export const install = async (version: string): Promise<string> => {
-  const githubToken = core.getInput('github_token')
+  const githubToken = core.getInput('github-token')
   if (githubToken === '') {
-    core.warning('No github_token supplied, API requests will be subject to stricter rate limiting')
+    core.warning('No github-token supplied, API requests will be subject to stricter rate limiting')
   }
-  const release: github.GitHubRelease | null = await github.getRelease(version)
+  const release: github.GitHubRelease | null = await github.getRelease(version, githubToken)
   if (!release) {
     throw new Error(`Cannot find Ploy ${version} release`)
   }

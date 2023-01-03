@@ -131,17 +131,26 @@ exports.getRelease = void 0;
 const semver = __importStar(__nccwpck_require__(1383));
 const core = __importStar(__nccwpck_require__(2186));
 const httpm = __importStar(__nccwpck_require__(6255));
-const getRelease = (version) => __awaiter(void 0, void 0, void 0, function* () {
-    const resolvedVersion = (yield resolveVersion(version)) || version;
+const auth_1 = __nccwpck_require__(5526);
+const getRelease = (version, token) => __awaiter(void 0, void 0, void 0, function* () {
+    const resolvedVersion = (yield resolveVersion(version, token)) || version;
     core.debug(`Version '${version}' resolved as '${resolvedVersion}'`);
     const url = `https://github.com/DonDebonair/ploy/releases/${resolvedVersion}`;
-    const http = new httpm.HttpClient('ploy-action');
+    const http = getHttpClient(token);
     return (yield http.getJson(url)).result;
 });
 exports.getRelease = getRelease;
-const resolveVersion = (version) => __awaiter(void 0, void 0, void 0, function* () {
+const getHttpClient = (token) => {
+    let requestHandlers = [];
+    if (token !== undefined) {
+        const credentialHandler = new auth_1.BearerCredentialHandler(token);
+        requestHandlers = [credentialHandler];
+    }
+    return new httpm.HttpClient('ploy-action', requestHandlers);
+};
+const resolveVersion = (version, token) => __awaiter(void 0, void 0, void 0, function* () {
     core.debug(`Resolving version '${version}'`);
-    const allTags = yield getAllTags();
+    const allTags = yield getAllTags(token);
     if (!allTags) {
         throw new Error(`Cannot find Ploy tags`);
     }
@@ -151,9 +160,9 @@ const resolveVersion = (version) => __awaiter(void 0, void 0, void 0, function* 
     }
     return version;
 });
-const getAllTags = () => __awaiter(void 0, void 0, void 0, function* () {
+const getAllTags = (token) => __awaiter(void 0, void 0, void 0, function* () {
     core.debug('Getting all tags');
-    const http = new httpm.HttpClient('ploy-action');
+    const http = getHttpClient(token);
     const url = 'https://api.github.com/repos/DonDebonair/ploy/releases';
     const getTags = http.getJson(url);
     const tagsResponse = yield getTags;
@@ -291,11 +300,11 @@ const github = __importStar(__nccwpck_require__(5928));
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const install = (version) => __awaiter(void 0, void 0, void 0, function* () {
-    const githubToken = core.getInput('github_token');
+    const githubToken = core.getInput('github-token');
     if (githubToken === '') {
-        core.warning('No github_token supplied, API requests will be subject to stricter rate limiting');
+        core.warning('No github-token supplied, API requests will be subject to stricter rate limiting');
     }
-    const release = yield github.getRelease(version);
+    const release = yield github.getRelease(version, githubToken);
     if (!release) {
         throw new Error(`Cannot find Ploy ${version} release`);
     }
