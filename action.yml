@@ -39,6 +39,10 @@ inputs:
     description: The GitHub token to use when making API requests.
     required: false
 
+outputs:
+  result:
+    description: 'STDOUT of the command for use in subsequent steps'
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
