@@ -35,7 +35,9 @@ const run = async (): Promise<void> => {
       }
     } else {
       const command = `${bin} ${inputs.command} ${inputs.deploymentFile}`
-      await exec.exec(command, undefined, {})
+      const output = await exec.getExecOutput(command, undefined, {})
+
+      core.setOutput('result', output.stdout)
     }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
