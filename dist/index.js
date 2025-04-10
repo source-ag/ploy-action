@@ -135,7 +135,7 @@ const auth_1 = __nccwpck_require__(5526);
 const getRelease = (version, token) => __awaiter(void 0, void 0, void 0, function* () {
     const resolvedVersion = (yield resolveVersion(version, token)) || version;
     core.debug(`Version '${version}' resolved as '${resolvedVersion}'`);
-    const url = `https://github.com/DonDebonair/ploy/releases/${resolvedVersion}`;
+    const url = `https://github.com/source-ag/ploy/releases/${resolvedVersion}`;
     const http = getHttpClient(token);
     return (yield http.getJson(url)).result;
 });
@@ -163,7 +163,7 @@ const resolveVersion = (version, token) => __awaiter(void 0, void 0, void 0, fun
 const getAllTags = (token) => __awaiter(void 0, void 0, void 0, function* () {
     core.debug('Getting all tags');
     const http = getHttpClient(token);
-    const url = 'https://api.github.com/repos/DonDebonair/ploy/releases';
+    const url = 'https://api.github.com/repos/source-ag/ploy/releases';
     const getTags = http.getJson(url);
     const tagsResponse = yield getTags;
     if (tagsResponse.result == null) {
@@ -310,7 +310,7 @@ const install = (version) => __awaiter(void 0, void 0, void 0, function* () {
         throw new Error(`Cannot find Ploy ${version} release`);
     }
     const filename = getFilename(release.tag_name);
-    const downloadUrl = util.format('https://github.com/DonDebonair/ploy/releases/download/%s/%s', release.tag_name, filename);
+    const downloadUrl = util.format('https://github.com/source-ag/ploy/releases/download/%s/%s', release.tag_name, filename);
     core.info(`Downloading ${downloadUrl}`);
     const authHeader = githubToken === '' ? undefined : `token ${githubToken}`;
     const downloadPath = yield tc.downloadTool(downloadUrl, undefined, authHeader);
