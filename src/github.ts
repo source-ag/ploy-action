@@ -12,7 +12,7 @@ export interface GitHubRelease {
 export const getRelease = async (version: string, token?: string): Promise<GitHubRelease | null> => {
   const resolvedVersion: string = (await resolveVersion(version, token)) || version
   core.debug(`Version '${version}' resolved as '${resolvedVersion}'`)
-  const url = `https://github.com/DonDebonair/ploy/releases/${resolvedVersion}`
+  const url = `https://github.com/source-ag/ploy/releases/${resolvedVersion}`
 
   const http = getHttpClient(token)
   return (await http.getJson<GitHubRelease>(url)).result
@@ -48,7 +48,7 @@ interface GitHubTag {
 const getAllTags = async (token?: string): Promise<string[]> => {
   core.debug('Getting all tags')
   const http = getHttpClient(token)
-  const url = 'https://api.github.com/repos/DonDebonair/ploy/releases'
+  const url = 'https://api.github.com/repos/source-ag/ploy/releases'
   const getTags = http.getJson<GitHubTag[]>(url)
   const tagsResponse = await getTags
   if (tagsResponse.result == null) {

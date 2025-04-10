@@ -1,6 +1,6 @@
 # Ploy Action
 
-This is a Github Action to deploy software using [Ploy](https://github.com/DonDebonair/ploy)
+This is a Github Action to deploy software using [Ploy](https://github.com/source-ag/ploy)
 
 ## Usage
 
@@ -29,7 +29,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
       - name: Do deployment
-        uses: DonDebonair/ploy-action@v1
+        uses: source-ag/ploy-action@v1
         with:
           deployment-file: development.yml
           github-token: ${{ github.token }}
