@@ -1,6 +1,6 @@
 {
   "name": "ploy-action",
-  "version": "1.0.0",
+  "version": "1.4.1",
   "private": true,
   "description": "Github Action to deploy software using Ploy",
   "main": "lib/main.js",
