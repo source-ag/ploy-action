@@ -17,7 +17,7 @@ export const install = async (version: string): Promise<string> => {
 
   const filename = getFilename(release.tag_name)
   const downloadUrl = util.format(
-    'https://github.com/DonDebonair/ploy/releases/download/%s/%s',
+    'https://github.com/source-ag/ploy/releases/download/%s/%s',
     release.tag_name,
     filename
   )
