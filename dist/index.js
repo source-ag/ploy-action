@@ -72,6 +72,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addCommitPushChanges = void 0;
 const simple_git_1 = __nccwpck_require__(9103);
+const MAX_PUSH_RETRIES = 3;
 const addCommitPushChanges = (deploymentFile, serviceId, version, authorName, authorEmail, branch, commitMessage) => __awaiter(void 0, void 0, void 0, function* () {
     const git = (0, simple_git_1.simpleGit)();
     git.addConfig('user.name', authorName);
@@ -82,7 +83,18 @@ const addCommitPushChanges = (deploymentFile, serviceId, version, authorName, au
     yield git.add(deploymentFile);
     const finalCommitMessage = commitMessage ? commitMessage : `ci: update ${serviceId} to version ${version}`;
     yield git.commit(finalCommitMessage);
-    yield git.push(undefined, branch);
+    for (let attempt = 1; attempt <= MAX_PUSH_RETRIES; attempt++) {
+        try {
+            yield git.push(undefined, branch);
+            return;
+        }
+        catch (err) {
+            if (attempt === MAX_PUSH_RETRIES)
+                throw err;
+            // Another concurrent update pushed first — rebase our commit on top and retry
+            yield git.pull('origin', branch, ['--rebase']);
+        }
+    }
 });
 exports.addCommitPushChanges = addCommitPushChanges;
 

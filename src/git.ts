@@ -1,5 +1,7 @@
 import {simpleGit} from 'simple-git'
 
+const MAX_PUSH_RETRIES = 3
+
 export const addCommitPushChanges = async (
   deploymentFile: string,
   serviceId: string,
@@ -18,5 +20,14 @@ export const addCommitPushChanges = async (
   await git.add(deploymentFile)
   const finalCommitMessage = commitMessage ? commitMessage : `ci: update ${serviceId} to version ${version}`
   await git.commit(finalCommitMessage)
-  await git.push(undefined, branch)
+  for (let attempt = 1; attempt <= MAX_PUSH_RETRIES; attempt++) {
+    try {
+      await git.push(undefined, branch)
+      return
+    } catch (err) {
+      if (attempt === MAX_PUSH_RETRIES) throw err
+      // Another concurrent update pushed first — rebase our commit on top and retry
+      await git.pull('origin', branch, ['--rebase'])
+    }
+  }
 }
